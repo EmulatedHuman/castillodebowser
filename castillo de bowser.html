@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+   
+<meta charset="utf-8">
+<title>Proyecto escenario</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+
+    #boton {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 40px;
+            cursor: pointer;
+          }
+          #activ {
+            color: green;
+
+          }
+    canvas {
+        background: red;
+    }
+</style>
+</head>
+<body>
+    <div id="boton">
+    Para comenzar da clic en <p id="activ">Activar</p>Mira alrededor usando el mouse, pulsa Esc para parar
+    </div>
+    <canvas id="mycanvas"></canvas>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.skypack.dev/-/three@v0.137.5-HJEdoVYPhjkiJWkt6XIa/dist=es2019,mode=raw/build/three.module.js",
+                "three/OrbitControls": "https://cdn.skypack.dev/-/three@v0.137.5-HJEdoVYPhjkiJWkt6XIa/dist=es2019,mode=raw/examples/jsm/controls/OrbitControls.js",         
+                "three": "./three.module.js",
+                "three/PointerLockControls": "./PointerLockControls.js",
+                "three/interactive": "./three.interactive.js",
+                "three/tween": "./tween.module.min.js"
+            
+            }
+        }
+    </script>
+    <script type="module">
+      
+      
+        import * as THREE from 'three';
+
+        import {OrbitControls} from 'three/OrbitControls';
+        console.log(OrbitControls);
+        import { InteractionManager } from 'three/interactive';//añade libreria itneractiva
+        import { TWEEN } from 'three/tween'; // Libreria movimiento suave
+        import { PointerLockControls } from 'three/PointerLockControls'; //control de camara
+
+
+        var renderer = new THREE.WebGLRenderer({canvas: document.getElementById ('mycanvas'),antialias: true});
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        renderer.setClearColor(0xefb810);
+        const loader = new THREE.TextureLoader();
+        loader.load('skies.jpg', function (texture){
+            scene.background = texture;
+        });
+
+        renderer.shadowMap.enabled=true;
+        renderer.shadowMap.type=THREE.PCFShadowMap;
+
+        var camera = new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,2000);
+        camera.position.set(0,25,50);
+        
+
+        //control camara
+        const gridHelper = new THREE.GridHelper(500,100);
+        const axesHelper = new THREE.AxesHelper(50);
+        //var controls = new OrbitControls(camera,renderer.domElement);
+        var controls = new PointerLockControls( camera, renderer.domElement );
+        document.getElementById('activ').onclick=()=>{
+        controls.lock()
+        }
+        controls.addEventListener( 'lock', function () {
+        boton.style.display = 'none';
+        } );
+        controls.addEventListener( 'unlock', function () {
+        boton.style.display = '';
+        } );
+
+
+        //añadir interaccion
+        var interactionManager = new InteractionManager(
+        renderer,
+        camera,
+        renderer.domElement
+        );
+
+        var scene = new THREE.Scene ();
+
+
+        const caverna = new THREE.TextureLoader().load('mountain.jpg');
+        var backg1 = new THREE.MeshStandardMaterial({map:caverna,transparent:true,opacity:1,side:THREE.BackSide});
+        var material = new THREE.MeshLambertMaterial({color:0x9b9b9b});
+        var material2 = new THREE.MeshLambertMaterial({color:0x6a5d4d});
+        var material3 = new THREE.MeshLambertMaterial({color:0x554a3e});
+        var material4 = new THREE.MeshLambertMaterial({color:0x505050});
+        var material5 = new THREE.MeshLambertMaterial({color:0x00ffff,transparent:true,opacity:0.3});
+
+        //Figuras
+        var cubo = new THREE.BoxGeometry(2,2,2); 
+        var cilo = new THREE.CylinderGeometry(4,4,1,50,50,false);
+        var cilo2 = new THREE.CylinderGeometry(5,4,1,50,50,false);
+        var cono = new THREE.ConeGeometry(5,5,20);
+        var cono2 = new THREE.ConeGeometry(0.5,2,15);
+        var esfera = new THREE.SphereGeometry(5,6,6);
+        var esfera2 = new THREE.SphereGeometry(75,75,75);
+        
+        //Mallas
+        var mesh = new THREE.Mesh(cubo,material);
+        var mesh2 = new THREE.Mesh(cubo,material);
+        var mesh3 = new THREE.Mesh(cubo,material);
+        var mesh4 = new THREE.Mesh(cubo,material);
+        var mesh5 = new THREE.Mesh(cubo,material);
+        var mesh6 = new THREE.Mesh(cubo,material);
+        var mesh7 = new THREE.Mesh(cubo,material);
+        var mesh8 = new THREE.Mesh(cubo,material);
+        var mesh9 = new THREE.Mesh(cubo,material);
+        var mesh10 = new THREE.Mesh(cilo,material);
+        var mesh11 = new THREE.Mesh(cilo2,material);
+        var mesh12 = new THREE.Mesh(cono,material);
+        var techo = new THREE.Mesh(cubo,material);
+        var cupula = new THREE.Mesh(esfera,material);
+        var picos = new THREE.Mesh(cono2,material);
+        var piso = new THREE.Mesh(cubo,material);
+        var puerta = new THREE.Mesh(cubo,material4);
+        var ventana1 = new THREE.Mesh(cubo,material4);
+        var vidrio = new THREE.Mesh(cubo,material5);
+        var picpuer = new THREE.Mesh(cono,material4);
+        var miniverse = new THREE.Mesh(esfera2,backg1);        
+
+        //Escala
+        mesh.scale.set(2,1,1);
+        mesh2.scale.set(2,1,1);
+        mesh3.scale.set(2,1,1);
+        mesh4.scale.set(2,1,1);
+        mesh5.scale.set(2,1,1);
+        mesh6.scale.set(2,1,1);
+        mesh7.scale.set(2,1,1);
+        mesh8.scale.set(2,1,1);
+        mesh9.scale.set(11,0.5,1.5);
+        mesh10.scale.set(1,14,1);
+
+        //posición
+        mesh.position.set(0,0,0);
+        mesh2.position.set(4.05,0,0);
+        mesh3.position.set(8.10,0,0);
+        mesh4.position.set(12.15,0,0);
+        mesh5.position.set(16.20,0,0); 
+        mesh6.position.set(0,0,0);
+        mesh7.position.set(8.10,0,0);
+        mesh8.position.set(16.20,0,0); 
+        mesh9.position.set(-1,9.75,-17.5);
+        mesh10.position.set(-12.5,7,-17.5);
+        mesh11.position.set(-12.5,14.5,-17.5);
+        mesh12.position.set(-12.5,17.5,-17.5);
+
+        //Grupo hileras
+        var hilera = new THREE.Group();
+        hilera.add(mesh,mesh2,mesh3,mesh4,mesh5); 
+        var hilera7 = new THREE.Group();
+        hilera7.add(mesh6,mesh7,mesh8);   
+        var hilera2 = hilera.clone();
+        var hilera3 = hilera.clone();
+        var hilera4 = hilera.clone();
+        var hilera5 = hilera.clone();
+        var hilera6 = hilera.clone();  
+
+        hilera2.position.set(-2,2.05,0);
+        hilera3.position.set(0,4.10,0);
+        hilera4.position.set(-2,6.15,0);
+        hilera5.position.set(0,8.20,0);
+        hilera6.position.set(-2,10.25,0);
+        hilera7.position.set(0,12.30,0);
+
+        //Grupo Pared
+        var pared = new THREE.Group();
+        pared.add(hilera,hilera2,hilera3,hilera4,hilera5,hilera6,hilera7);
+        pared.position.set(-8.05,1,-15);
+        var pared2 = pared.clone();
+        pared2.position.set(-8.05,1,-20);
+
+        //Grupo Pared castillo
+        var pared3 = pared.clone();
+        pared3.position.set(-7.6,0.35,-10);
+        pared3.scale.set(0.35,0.35,0.35);
+        var pared4 = pared3.clone();
+        pared3.position.set(-0.5,0.35,-10);
+        var murocas = new THREE.Group();
+        murocas.add(pared3,pared4);
+        var murocas2 = murocas.clone();
+        murocas2.position.set(0,4.3,0);  
+        var castellg = new THREE.Group();
+        castellg.add(murocas,murocas2);
+
+        //Castillo
+        var castwall = castellg.clone();
+        castwall.position.set(-4.9,0,0.9);
+        castwall.rotation.y=0.785398;  
+        var castwall2 = castellg.clone();
+        castwall2.position.set(4.3,0,3);
+        castwall2.rotation.y=-0.785398; 
+        var castell = new THREE.Group();
+        castell.add(castellg,castwall,castwall2);
+        var castell2 = castell.clone();
+        castell2.position.set(-2.8,0,-0.05);
+        castell2.rotation.y=3.1416; 
+        var castillo = new THREE.Group();
+        castillo.add(castell2,castell);
+        castillo.position.set(1.4,0,0);
+        techo.rotation.y=0.7854;
+        techo.position.set(-6.5,8,0);
+        techo.scale.set(7,0.5,7);
+        var techo2 = techo.clone();
+        techo2.position.set(6.5,8,0);
+        var techo3 = techo.clone();
+        techo3.position.set(0,8,0);
+        techo3.rotation.y=1.5708;
+        techo3.scale.set(10,0.5,7);
+        var estructura = new THREE.Group();
+        estructura.add(castillo,techo,techo2,techo3);
+        var estructura2 = estructura.clone();
+        estructura2.position.set(0,8,0);
+        estructura2.scale.set(0.5,0.5,0.5);
+        cupula.position.set(0,12,0);
+        picos.position.set(0,17.7,0);
+        var pico2 = picos.clone();
+        pico2.position.set(0,17,2.5);
+        pico2.rotation.x=0.5236;
+        var pico3 = picos.clone();
+        pico3.position.set(0,15,4.5);
+        pico3.rotation.x=1.0472;
+        var pico4 = picos.clone();
+        pico4.position.set(0,13,5);
+        pico4.rotation.x=1.5708;
+        var puas = new THREE.Group();
+        puas.add(pico2,pico3,pico4);
+        var puas2 = puas.clone();
+        puas2.rotation.y=1.0472;
+        var puas3 = puas.clone();
+        puas3.rotation.y=2.0944;
+        var puas4 = puas.clone();
+        puas4.rotation.y=3.1416;
+        var puas5 = puas.clone();
+        puas5.rotation.y=4.1888;
+        var puas6 = puas.clone();
+        puas6.rotation.y=5.2360;
+        piso.position.set(0,-0.3,0);
+        piso.scale.set(35,0.3,25);
+
+        //Grupo Muro
+        var muro = new THREE.Group();
+        muro.add(pared,pared2,mesh9);
+        var muro2 = muro.clone();
+        muro2.position.set(5.3,0,2.8); 
+        muro2.rotation.y=-0.872665; 
+        var muro3 = muro.clone();
+        muro3.position.set(-6.2,0,2.4); 
+        muro3.rotation.y=0.872665;         
+
+        //Grupo torre
+        var torre = new THREE.Group();
+        torre.add(mesh10,mesh11,mesh12);
+        var torre2 = torre.clone();
+        torre2.position.set(23,0,0); 
+        var torre3 = torre.clone();
+        torre3.position.set(38,0,17.5); 
+        var torre4 = torre.clone();
+        torre4.position.set(-15,0,17.5);
+
+        //muros juntos
+        var muros = new THREE.Group();
+        muros.add(muro2,muro3,torre,torre2);
+        var muros2 = muros.clone();
+        muros2.rotation.y=3.1416;
+        muros2.position.set(-1,0,0);  
+        
+        //ventanas
+        var ventana2 = ventana1.clone();
+        ventana1.scale.set(1.5,0.25,0.50);
+        ventana2.scale.set(0.25,1.5,0.50);
+        var ventana3 = ventana2.clone();
+        var ventana4 = ventana1.clone();
+        var ventana5 = ventana1.clone();
+        var ventana6 = ventana2.clone();
+        var ventana7 = ventana1.clone();
+        ventana1.position.set(0,5,19.75);
+        ventana2.position.set(1.25,6.75,19.75);
+        ventana3.position.set(-1.25,6.75,19.75);
+        ventana4.position.set(0,8,19.75);
+        ventana5.position.set(0,6.5,20.1);
+        ventana6.position.set(0,6.5,20.1);
+        ventana7.position.set(0,6.5,19.45);
+        ventana5.scale.set(1,0.2,0.15);
+        ventana6.scale.set(0.2,1.25,0.15);
+        ventana7.scale.set(1,1.25,0.15);
+        vidrio.position.set(0,6.5,20.1);
+        vidrio.scale.set(1,1.25,0.1);
+
+        var ventan = new THREE.Group();
+        ventan.add(ventana1,ventana2,ventana3,ventana4,ventana5,ventana6,ventana7,vidrio);
+        
+        //Puerta
+        puerta.position.set(0,0.3,10.5);
+        puerta.scale.set(3,0.3,0.3);
+        var puerta2 = puerta.clone();
+        puerta2.position.set(0,7.8,10.5);
+        puerta2.scale.set(3,0.3,0.3);
+        var puerta3 = puerta.clone();
+        puerta3.position.set(0.35,4.05,10.5);
+        puerta3.scale.set(0.3,3.75,0.3);
+        var puerta4 = puerta3.clone();
+        puerta4.position.set(2.7,4.05,10.5);
+        var puerta5 = puerta3.clone();
+        puerta5.position.set(-2.7,4.05,10.5);
+        var puerta6 = puerta3.clone();
+        puerta6.position.set(-0.35,4.05,10.5);
+        var puerta7 = mesh.clone();
+        puerta7.position.set(0,4.05,10.5);
+        puerta7.scale.set(3,4,0.15);
+        picpuer.position.set(1.5,6.05,10.5);
+        picpuer.scale.set(0.125,0.25,0.125);
+        picpuer.rotation.x=1.5708;
+        var pic2 = picpuer.clone();
+        pic2.position.set(1.5,4.05,10.5);
+        var pic3 = picpuer.clone();
+        pic3.position.set(1.5,2.05,10.5);
+        var pic4 = picpuer.clone();
+        pic4.position.set(-1.5,6.05,10.5);
+        var pic5 = picpuer.clone();
+        pic5.position.set(-1.5,4.05,10.5);
+        var pic6 = picpuer.clone();
+        pic6.position.set(-1.5,2.05,10.5);
+
+        var puertafin = new THREE.Group();
+        puertafin.add(puerta,puerta2,puerta3,puerta4,puerta5,puerta6,puerta7,picpuer,pic2,pic3,pic4,pic5,pic6);
+
+        //Luces
+        var light1 = new THREE.SpotLight(0x51c166,0.6,40,1.0472,0.1,0.8);
+        var light2 = new THREE.SpotLight(0x00ffff,0.8,40,1.0472,0.1,0.8);
+        var light3 = new THREE.SpotLight(0xffd700,0.8,40,1.0472,0.1,0.8);
+        var light4 = new THREE.SpotLight(0x51c166,0.6,40,1.0472,0.1,0.8);
+        var light5 = new THREE.SpotLight(0x51c166,0.6,40,1.0472,0.1,0.8);
+        var light6 = new THREE.SpotLight(0x51c166,0.6,40,1.0472,0.1,0.8);
+        var lightz = new THREE.AmbientLight(0xffffff,0.3);
+
+        //Posición luces
+        light1.position.y= 30;
+        light1.position.z= 40;
+        light2.position.y= 30;
+        light2.position.x= 40;
+        light3.position.y= 30;
+        light3.position.x= -40;
+        light4.position.y= 30;
+        light4.position.z= -40;
+        light5.position.y= 30;        
+        lightz.position.y= 20;
+
+        //Sombras
+        light1.target=cupula;
+        light1.castShadow=true;
+        light1.shadow.bias=0.0001;
+        //light1.shadow.mapSize.width=2048*2;
+        //light1.shadow.mapSize.height=2048*2;
+        light2.target=piso;
+        light2.castShadow=true;
+        light2.shadow.bias=0.0001;
+        //light2.shadow.mapSize.width=2048*2;
+        //light2.shadow.mapSize.height=2048*2;
+        light3.target=piso;
+        light3.castShadow=true;
+        light3.shadow.bias=0.0001;
+        //light3.shadow.mapSize.width=2048*2;
+        //light3.shadow.mapSize.height=2048*2;
+        light4.target=piso;
+        light4.castShadow=true;
+        light4.shadow.bias=0.0001;
+        //light4.shadow.mapSize.width=2048*2;
+        //light4.shadow.mapSize.height=2048*2;
+        light5.target=piso;
+        light5.castShadow=true;
+        light5.shadow.bias=0.0001;
+        //light5.shadow.mapSize.width=2048*2;
+        //light5.shadow.mapSize.height=2048*2;
+        light6.target=piso;
+        light6.castShadow=true;
+        light6.shadow.bias=0.0001;
+        //light6.shadow.mapSize.width=2048*2;
+        //light6.shadow.mapSize.height=2048*2;
+
+        //Helpers
+        var luxnosupp1 = new THREE.SpotLightHelper(light1);
+        var luxnosupp2 = new THREE.SpotLightHelper(light2);
+        var luxnosupp3 = new THREE.SpotLightHelper(light3);
+        var luxnosupp4 = new THREE.SpotLightHelper(light4);
+        var luxnosupp5 = new THREE.SpotLightHelper(light5);
+        var luxnosupp6 = new THREE.SpotLightHelper(light6);
+       // var luxnosuppz = new THREE.PointLightHelper(lightz);
+
+       
+        estructura.castShadow=true;
+        estructura2.castShadow=true;
+
+        puerta.castShadow=true;
+        piso.castShadow=true;
+        muros.receiveShadow=true;
+        piso.receiveShadow=true;
+
+        miniverse.position.set(0,20,0);
+
+
+        var groupbow = new THREE.Group();
+        groupbow.add(muro,muros,muros2,estructura,estructura2,cupula,picos,piso,puas,puas2,puas3,puas4,puas5,puas6,puertafin);
+
+        
+        //CASTILLO PEACH
+
+        //figuras
+        var cppis = new THREE.BoxGeometry(80,1,60);
+        var cpcua1 = new THREE.BoxGeometry(2,1,1);
+        var cpcua2 = new THREE.BoxGeometry(1,1,1);
+        var cpcir = new THREE.CylinderGeometry(6,6,1,25,25,false);
+        var cpcili = new THREE.CylinderGeometry(6,6,1,25,25,false);
+        var cpcone = new THREE.ConeGeometry(7,5,50);
+        var cpcili2 = new THREE.CylinderGeometry(8,12,4,25,25,false);
+
+
+        //materiales
+        const fondovid = new THREE.TextureLoader().load('sasuki.jpeg');
+        const castelopea = new THREE.TextureLoader().load('lago.jpg');
+        var marmol = new THREE.MeshLambertMaterial({color:0xffffff});
+        var rosado = new THREE.MeshLambertMaterial({color:0xec53a0});
+        var vidrios = new THREE.MeshStandardMaterial({map:fondovid,transparent:true,opacity:0.25,side:THREE.BackSide});
+        var campo = new THREE.MeshStandardMaterial({map:castelopea,transparent:true,opacity:1,side:THREE.BackSide});
+
+        //mallas
+        var cppis1 = new THREE.Mesh(cppis,marmol);
+        var cplad = new THREE.Mesh(cpcua1,marmol);
+        var cplad2 = cplad.clone();
+        var cplad3 = cplad.clone();
+        var cplad4 = cplad.clone();
+        var cplad5 = cplad.clone();
+        var cplad6 = cplad.clone();
+        var cpfrente = new THREE.Mesh(cpcir,marmol);
+        var cpsal = new THREE.Mesh(cpcua1,rosado);
+        var cptech = new THREE.Mesh(cpcua2,rosado);
+        var cptorre = new THREE.Mesh(cpcili,marmol);
+        var cpdivtor = new THREE.Mesh(cpcili,rosado);
+        var cpsuptor = new THREE.Mesh(cpcone,rosado);
+        var cpcolcen = new THREE.Mesh(cpcili,marmol);
+        var cpcolcen3 = new THREE.Mesh(cpcili2,rosado);
+        var cpvent = new THREE.Mesh(cpcua2,rosado);
+        var cpvent2 = new THREE.Mesh(cpcua2,marmol);
+        var cpvidr = new THREE.Mesh(cpcua2,vidrios);
+        var fonvent = new THREE.Mesh(cpcua2,marmol);
+
+
+        
+        //LU...CE...CI...TA...
+        //0xfdf6ec
+        var cpluz = new THREE.PointLight(0xff0053,0.3,80,0.5);
+        cpluz.position.set(100,50,30);
+        var cpluz2 = cpluz.clone();
+        cpluz.position.set(100,50,-30);
+
+        //posiciones
+        cppis1.position.set(100,0,0);
+        cpluz.target=cptech;
+        cplad.position.set(100,1,25);
+        cplad2.position.set(102.05,1,25);
+        cplad3.position.set(104.1,1,25);
+        cplad4.position.set(106.15,1,25);
+        cplad5.position.set(108.2,1,25);
+        cplad6.position.set(110.25,1,25);       
+        cpfrente.position.set(99.5,6,25);
+        cpfrente.rotation.x=1.5708;
+        cpfrente.scale.set(3,0.5,1);
+        cpsal.position.set(119.7,9.6,24);
+        cpsal.scale.set(4,1.5,4);
+        var cpsal2 = cpsal.clone();
+        cpsal2.position.set(79.4,9.6,24); 
+        var cpsal3 = cpsal2.clone();
+        cpsal3.position.set(87.1,10.65,24); 
+        cpsal3.rotation.z=0.261799;
+        var cpsal4 = cpsal3.clone();
+        cpsal4.position.set(112,10.65,24); 
+        cpsal4.rotation.z=-0.261799;
+        var cpsal5 = cpsal4.clone();
+        cpsal5.position.set(99.55,11.65,24); 
+        cpsal5.rotation.z=0;
+        cpsal5.scale.set(8.8,1.5,4); 
+        var cpsaliente = new THREE.Group();
+        cpsaliente.add(cpsal,cpsal2,cpsal3,cpsal4,cpsal5,cpfrente);
+        var cpsaliente2 = cpsaliente.clone();
+        cpsaliente2.position.set(47,0,100);
+        cpsaliente2.rotation.y=1.5708;
+        var cpsaliente3 = cpsaliente.clone();
+        cpsaliente3.position.set(104,0,100);
+        cpsaliente3.rotation.y=1.5708;
+        var cpsaliente4 = cpsaliente.clone();
+        cpsaliente4.position.set(200,0,0);
+        cpsaliente4.rotation.y=3.1416;
+
+        var cpsaliente5 = cpsaliente.clone();
+        cpsaliente5.position.set(0,8.4,-3);
+        var cpsaliente6 = cpsaliente.clone();
+        cpsaliente6.scale.set(0.8,1,1);
+        cpsaliente6.position.set(50,8.4,81);
+        cpsaliente6.rotation.y=1.5708;
+        var cpsaliente7 = cpsaliente.clone();
+        cpsaliente7.scale.set(0.8,1,1);
+        cpsaliente7.position.set(101,8.4,81);
+        cpsaliente7.rotation.y=1.5708;        
+        var cpsaliente8 = cpsaliente.clone();
+        cpsaliente8.position.set(200,8.4,3.9);
+        cpsaliente8.rotation.y=3.1416;
+
+        var cpsaliendos = new THREE.Group();
+        cpsaliendos.add(cppis1,cpsaliente,cpsaliente2,cpsaliente3,cpsaliente4,cpsaliente5,cpsaliente6,cpsaliente7,cpsaliente8);
+
+        //grupos ladrillos - lock
+        var cppared = new THREE.Group();
+        cppared.add(cplad,cplad2,cplad3,cplad4,cplad5,cplad6);
+        var cppared2 = cppared.clone();
+        cppared2.position.set(1,1.05,0);
+        var cppared3 = cppared.clone();
+        cppared3.position.set(0,2.1,0);
+        var cppared4 = cppared.clone();
+        cppared4.position.set(1,3.15,0);
+        var cppared5 = cppared.clone();
+        cppared5.position.set(0,4.2,0);
+        var cppared6 = cppared.clone();
+        cppared6.position.set(1,5.25,0);
+        var cppared7 = cppared.clone();
+        cppared7.position.set(0,6.3,0);
+        var cppared8 = cppared.clone();
+        cppared8.position.set(1,7.35,0);
+        
+
+        //grupos paredes
+        var cpmuro = new THREE.Group();
+        cpmuro.add(cppared,cppared2,cppared3,cppared4,cppared5,cppared6,cppared7,cppared8);
+        var cpmuro2 = cpmuro.clone();
+        cpmuro2.position.set(12.3,0,0);
+        var cpmuro3 = cpmuro.clone();
+        cpmuro3.position.set(-12.3,0,0);
+        var cpmuro4 = cpmuro.clone();
+        cpmuro4.position.set(-24.6,0,0);
+        var cpmuro5 = cpmuro.clone();
+        var cpmuralla = new THREE.Group();
+        cpmuralla.add(cpmuro,cpmuro2,cpmuro3,cpmuro4);
+        var cpmuralla2 = cpmuralla.clone();
+        cpmuralla2.position.set(0,8.4,-3);
+        var cpmuralla3 = cpmuralla.clone();
+        cpmuralla3.position.set(45,0,100);
+        cpmuralla3.rotation.y=1.5708;
+        var cpmuralla4 = cpmuralla.clone();
+        cpmuralla4.position.set(104,0,100);
+        cpmuralla4.rotation.y=1.5708;
+        var cpmuralla5 = cpmuralla2.clone();
+        cpmuralla5.position.set(101,8.4,86);
+        cpmuralla5.scale.set(0.85,1,1);
+        cpmuralla5.rotation.y=1.5708;
+        var cpmuralla6 = cpmuralla2.clone();
+        cpmuralla6.position.set(48,8.4,86);
+        cpmuralla6.scale.set(0.85,1,1);
+        cpmuralla6.rotation.y=1.5708;
+        var cpmuralla7 = cpmuralla.clone();
+        cpmuralla7.position.set(0,8.4,-46);
+        var cpmuralla8 = cpmuralla.clone();
+        cpmuralla8.position.set(0,0,-50);
+
+        var cpparedes = new THREE.Group();
+        cpparedes.add(cpmuralla,cpmuralla2,cpmuralla3,cpmuralla4,cpmuralla5,cpmuralla6,cpmuralla7,cpmuralla8);
+
+        //Techo
+        cptech.position.set(100,20.5,0);
+        var cptech2 = cptech.clone();
+        cptech2.position.set(81,19,-12.5)
+        cptech.scale.set(30,2,15.2);
+        cptech2.scale.set(12,2,12);
+        cptech2.rotation.x=-0.1309;
+        cptech2.rotation.z=0.1309;
+        var cptech3 = cptech.clone();
+        cptech3.position.set(119,19,-12.5)
+        cptech3.scale.set(12,2,12);
+        cptech3.rotation.x=-0.1309;
+        cptech3.rotation.z=-0.1309;
+        var cptech4 = cptech.clone();
+        cptech4.position.set(119,19,13);
+        cptech4.scale.set(12,2,12);
+        cptech4.rotation.x=0.1309;
+        cptech4.rotation.z=-0.1309;
+        var cptech5 = cptech.clone();
+        cptech5.position.set(81,19,13)
+        cptech5.scale.set(12,2,12);
+        cptech5.rotation.x=0.1309;
+        cptech5.rotation.z=0.1309;
+        var cptech6 = cptech.clone();
+        cptech6.position.set(100,19.75,13)
+        cptech6.scale.set(26,2,12);
+        cptech6.rotation.x=0.1309;
+        var cptech7 = cptech.clone();
+        cptech7.position.set(100,19.75,-12.5)
+        cptech7.scale.set(26,2,12);
+        cptech7.rotation.x=-0.1309;
+        var cptech8 = cptech.clone();
+        cptech8.position.set(80.5,19.75,0.5)
+        cptech8.scale.set(10,2,14);
+        cptech8.rotation.z=0.1309;
+        var cptech9 = cptech.clone();
+        cptech9.position.set(119.5,19.75,0.5)
+        cptech9.scale.set(10,2,14);
+        cptech9.rotation.z=-0.1309;
+        var corniza = new THREE.Group();
+        corniza.add(cptech4,cptech5,cptech6);
+        var corniza2 = corniza.clone();
+
+        var cprosado = new THREE.Group();
+        cprosado.add(cptech,cptech2,cptech3,cptech4,cptech5,cptech6,cptech7,cptech8,cptech9,corniza,corniza2);
+        
+
+        //torres
+        cptorre.position.set(72,10,22);
+        cptorre.scale.y=20;
+        var cptorre2 = cptorre.clone();
+        cptorre2.position.set(72,10,-22);
+        var cptorre3 = cptorre.clone();
+        cptorre3.position.set(128,10,22);
+        var cptorre4 = cptorre.clone();
+        cptorre4.position.set(128,10,-22);
+        cpdivtor.position.set(72,9.59,22)
+        cpdivtor.scale.set(1.1,1.5,1.1)
+        var cpdivtor2 = cpdivtor.clone();
+        cpdivtor2.position.set(128,9.59,22);
+        var cpdivtor3 = cpdivtor.clone();
+        cpdivtor3.position.set(72,9.59,-22);
+        var cpdivtor4 = cpdivtor.clone();
+        cpdivtor4.position.set(128,9.59,-22);
+        var cpdivtor5 = cpdivtor.clone();
+        cpdivtor5.position.set(72,18,22);
+        var cpdivtor6 = cpdivtor.clone();
+        cpdivtor6.position.set(128,18,22);
+        var cpdivtor7 = cpdivtor.clone();
+        cpdivtor7.position.set(72,18,-22);
+        var cpdivtor8 = cpdivtor.clone();
+        cpdivtor8.position.set(128,18,-22);
+        cpsuptor.position.set(72,22.5,22);
+        var cpsuptor2 = cpsuptor.clone();
+        cpsuptor2.position.set(128,22.5,22);
+        var cpsuptor3 = cpsuptor.clone();
+        cpsuptor3.position.set(72,22.5,-22);
+        var cpsuptor4 = cpsuptor.clone();
+        cpsuptor4.position.set(128,22.5,-22);
+
+        var cptorrefin = new THREE.Group();
+        cptorrefin.add(cptorre,cptorre2,cptorre3,cptorre4,cpdivtor,cpdivtor2,cpdivtor3,cpdivtor4,cpdivtor5,cpdivtor6,cpdivtor7,cpdivtor8,cpsuptor,cpsuptor2,cpsuptor3,cpsuptor4);
+
+        //columna central
+        cpcolcen.position.set(100,22,10);
+        var cpcolcen2 = cpcolcen.clone();
+        cpcolcen2.position.set(100,27,10);
+        cpcolcen.scale.set(2,2.5,2);
+        cpcolcen2.scale.set(1.75,8,1.75);
+        cpcolcen3.position.set(100,32.5,10);
+        var cpcolcen4 = cpcolcen.clone();
+        cpcolcen4.position.set(100,37,10);
+        cpcolcen4.scale.set(1.3,6,1.3);
+        var cpcolcen5 = cpcolcen3.clone();
+        cpcolcen5.position.set(100,41,10);
+        cpcolcen5.scale.set(0.7,0.6,0.7);
+        var cpcolcen6 = cpcolcen.clone();
+        cpcolcen6.position.set(100,46,10);
+        cpcolcen6.scale.set(0.95,8,0.95);
+        var cpsuptor5 = cpsuptor.clone();
+        cpsuptor5.position.set(100,52,10);
+
+        var cpcolumna = new THREE.Group();
+        cpcolumna.add(cpcolcen,cpcolcen2,cpcolcen3,cpcolcen4,cpcolcen5,cpcolcen6,cpsuptor5);
+
+
+        //ventanas
+        cpvent.position.set(100,10,50);
+        cpvent2.position.set(99.25,11,50);
+        cpvent.scale.set(2,0.25,2);
+        cpvent2.scale.set(0.25,2,1.8);
+        var cpvent3 = cpvent2.clone();
+        cpvent3.position.set(100.75,11,50);
+        cpvidr.position.set(100,11,50.75);
+        cpvidr.scale.set(1.3,1.8,0.1);
+        corniza2.position.set(95,7.5,47.5);
+        corniza2.scale.set(0.05,0.25,0.2);
+        fonvent.position.set(100,11,50.60);
+        fonvent.scale.set(1.3,1.8,0.1);
+        var cpventco = new THREE.Group();
+        cpventco.add(cpvent,cpvent2,cpvent3,cpvidr,corniza2,fonvent);
+        var cpven1 = cpventco.clone();
+        cpven1.position.set(-20,-5,-25);
+        var cpven2 = cpven1.clone();
+        cpven2.position.set(-15,-5,-25);
+        var cpven3 = cpven1.clone();
+        cpven3.position.set(-10,-5,-25);
+        var cpven4 = cpven1.clone();
+        cpven4.position.set(10,-5,-25);
+        var cpven5 = cpven1.clone();
+        cpven5.position.set(15,-5,-25);
+        var cpven6 = cpven1.clone();
+        cpven6.position.set(20,-5,-25);
+        var cpven7 = cpven1.clone();
+        cpven7.position.set(28,-5,-22.5);
+        var cpven8 = cpven1.clone();
+        cpven8.position.set(-28,-5,-22.5);
+        var cpventinas = new THREE.Group();
+        cpventinas.add(cpven1,cpven2,cpven3,cpven4,cpven5,cpven6);
+        var cpventinas3 = new THREE.Group();
+        cpventinas3.add(cpven8,cpven7);
+        var cpventinas2 = cpventinas.clone();
+        cpventinas2.position.set(0,8.5,-3);
+        var cpventinas4 = cpventinas3.clone();
+        cpventinas4.position.set(0,8.5,0);
+        var cpventonas = new THREE.Group();
+        cpventonas.add(cpventinas,cpventinas2,cpventinas3,cpventinas4);
+        var cpventonas2 = cpventonas.clone();
+        cpventonas2.rotation.y=3.14159;
+        cpventonas2.position.set(200,0,0);
+        var cpven9 = cpven1.clone();
+        cpven9.position.set(0,15.5,-30);
+        var cpven10 = cpven1.clone();
+        cpven10.position.set(0,26,-32.5);
+        var cpven11 = cpven1.clone();
+        cpven11.position.set(0,35,-35);
+        var cpventcl = new THREE.Group();
+        cpventcl.add(cpven9,cpven10,cpven11);
+        var cpventcl2 = cpventcl.clone();
+        cpventcl2.rotation.y=1.5839;
+        cpventcl2.position.set(91.5,0,110);
+        var cpventcl3 = cpventcl.clone();
+        cpventcl3.rotation.y=-1.5839;
+        cpventcl3.position.set(111,0,-90);
+        var cpventcl4 = cpventcl.clone();
+        cpventcl4.rotation.y=3.14159;
+        cpventcl4.position.set(200,0,20);
+        var cpven12 = cpven1.clone();
+        cpven12.position.set(121.5,-5,-110);
+        cpven12.rotation.y=-1.5839;
+        var cpven13 = cpven1.clone();
+        cpven13.position.set(121.5,-5,-105);
+        cpven13.rotation.y=-1.5839;
+        var cpven14 = cpven1.clone();
+        cpven14.position.set(121.5,-5,-100);
+        cpven14.rotation.y=-1.5839;
+        var cpven15 = cpven1.clone();
+        cpven15.position.set(121.5,-5,-95);
+        cpven15.rotation.y=-1.5839;
+        var cpven16 = cpven1.clone();
+        cpven16.position.set(121.5,-5,-90);
+        cpven16.rotation.y=-1.5839;
+        var cpvenlat = new THREE.Group();
+        cpvenlat.add(cpven12,cpven13,cpven14,cpven15,cpven16);
+        cpvenlat.position.set(0,0,1);
+        var cpvenlat2 = cpvenlat.clone();
+        cpvenlat2.position.set(2.5,9,1);
+        var cpvenlate = new THREE.Group();
+        cpvenlate.add(cpvenlat,cpvenlat2);
+        var cpvenlate2 = cpvenlate.clone();
+        cpvenlate2.rotation.y=3.14159;
+        cpvenlate2.position.set(199,0,1);
+
+
+        var miniverse2 = new THREE.Mesh(esfera2,campo);
+        miniverse2.position.set(200,20,0);
+        var ventafin = new THREE.Group();
+        ventafin.add(cpvenlate,cpvenlate2,cpventcl,cpventcl2,cpventcl3,cpventcl4,cpventinas,cpventonas,cpventonas2,cpven7,cpven8);
+        var groupcp = new THREE.Group();
+        groupcp.add(cpluz,cpluz2,cpparedes,cprosado,cptorrefin,cpcolumna,ventafin,cpsaliendos);
+        groupcp.position.set(100,0,0);
+        
+        //PIRAMIDE
+
+        //Figuras
+        var pirap1 = new THREE.BoxGeometry(80,1,80);
+        var piracua1 = new THREE.BoxGeometry(5,2,2.5);
+        var piracua2 = new THREE.BoxGeometry(1,1,1);
+        
+        //materiales
+        var pirare = new THREE.MeshLambertMaterial({color:0xe7dac6});
+        var piraladri = new THREE.MeshLambertMaterial({color:0xb9935a});
+
+         //mallas
+         var pirap1 = new THREE.Mesh(pirap1,pirare);
+         var piralad = new THREE.Mesh(piracua1,piraladri);
+         var piralad2 = piralad.clone();
+         var piralad3 = piralad.clone();
+         var piralad4 = piralad.clone();
+         var piralad5 = piralad.clone();
+         var piralad6 = piralad.clone();
+         var piralad7 = piralad.clone();
+         var piralad8 = piralad.clone();
+         var piralad9 = piralad.clone();
+         var piralad10 = piralad.clone();
+         var piralad11 = piralad.clone();
+         var piralad12 = piralad.clone();
+         var piralad13 = piralad.clone();
+
+        //Luz
+         var piraluz = new THREE.PointLight(0xffffff ,0.7,80,0.5);
+        piraluz.position.set(-100,35,0);
+
+        //posiciones
+        pirap1.position.set(-100,0,0);
+        piralad.position.set(-130,2,25);
+        piralad2.position.set(-124.85,2,25);
+        piralad3.position.set(-119.70,2,25);
+        piralad4.position.set(-114.55,2,25);
+        piralad5.position.set(-109.40,2,25);
+        piralad6.position.set(-104.25,2,25);
+        piralad7.position.set(-99.10,2,25);
+        piralad8.position.set(-93.95,2,25);
+        piralad9.position.set(-88.80,2,25);
+        piralad10.position.set(-83.65,2,25);
+        piralad11.position.set(-78.50,2,25);
+        piralad12.position.set(-73.35,2,25);
+
+        //Grupos
+        var hilepi = new THREE.Group();
+        hilepi.add(piralad,piralad2,piralad3,piralad4,piralad5,piralad6,piralad7,piralad8,piralad9,piralad10,piralad11,);
+        var hilepi2 = hilepi.clone();
+        hilepi2.position.set(2.575,2,-2.6);
+
+        var hilepi3 = new THREE.Group();
+        hilepi3.add(piralad,piralad2,piralad3,piralad4,piralad5,piralad6,piralad7,piralad8,piralad9,piralad10);
+        var hilepi4 = hilepi3.clone();
+        hilepi4.position.set(5.15,4,-5.2);
+
+        var hilepi5 = new THREE.Group();
+        hilepi5.add(piralad,piralad2,piralad3,piralad4,piralad5,piralad6,piralad7,piralad8,piralad9);
+        var hilepi6 = hilepi5.clone();
+        hilepi6.position.set(7.725,6,-7.8);
+
+        var hilepi7 = new THREE.Group();
+        hilepi7.add(piralad,piralad2,piralad3,piralad4,piralad5,piralad6,piralad7,piralad8);
+        var hilepi8 = hilepi7.clone();
+        hilepi8.position.set(10.3,8,-10.4);
+
+        var hilepi9 = new THREE.Group();
+        hilepi9.add(piralad,piralad2,piralad3,piralad4,piralad5,piralad6,piralad7);
+        var hilepi10 = hilepi9.clone();
+        hilepi10.position.set(12.875,10,-13);
+
+        var hilepi11 = new THREE.Group();
+        hilepi11.add(piralad,piralad2,piralad3,piralad4,piralad5,piralad6);
+        var hilepi12 = hilepi11.clone();
+        hilepi12.position.set(15.45,12,-15.6);
+
+        var hilepi13 = new THREE.Group();
+        hilepi13.add(piralad,piralad2,piralad3,piralad4,piralad5);
+        var hilepi14 = hilepi13.clone();
+        hilepi14.position.set(18.025,14,-18.2);
+
+        var hilepi15 = new THREE.Group();
+        hilepi15.add(piralad,piralad2,piralad3,piralad4);
+        var hilepi16 = hilepi15.clone();
+        hilepi16.position.set(20.6,16,-20.8);
+
+        var hilepi17 = new THREE.Group();
+        hilepi17.add(piralad,piralad2,piralad3);
+        var hilepi18 = hilepi17.clone();
+        hilepi18.position.set(23.175,18,-23.4);
+
+        var hilepi19 = new THREE.Group();
+        hilepi19.add(piralad,piralad2);
+        var hilepi20 = hilepi19.clone();
+        hilepi20.position.set(25.75,20,-26);
+
+        var hilepi21 = new THREE.Group();
+        hilepi21.add(piralad);
+        var hilepi22 = hilepi21.clone();
+        hilepi22.position.set(28.325,22,-28.6);
+
+        var hileraspira = new THREE.Group();
+        hileraspira.add(hilepi,hilepi2,hilepi3,hilepi4,hilepi5,hilepi6,hilepi7,hilepi8,hilepi9,hilepi10,hilepi11,hilepi12,hilepi13,hilepi14,hilepi15,hilepi16,hilepi17,hilepi18,hilepi19,hilepi20,hilepi21,hilepi22,piralad12);
+        hileraspira.position.set(0,0,0);
+        var hileraspira2 = hileraspira.clone();
+        hileraspira2.rotation.y=1.5708;
+        hileraspira2.position.set(-97,0,-106.5);
+        var hileraspira3 = hileraspira.clone();
+        hileraspira3.rotation.y=-1.5708;
+        hileraspira3.position.set(-106.35,0,96.9);
+        var hileraspira4 = hileraspira.clone();
+        hileraspira4.rotation.y=3.14159;
+        hileraspira4.position.set(-203.4,0,-10);
+
+        const desierto = new THREE.TextureLoader().load('dessert.jpg');
+        var desier = new THREE.MeshStandardMaterial({map:desierto,transparent:true,opacity:1,side:THREE.BackSide});
+        var miniverse3 = new THREE.Mesh(esfera2,desier);
+        miniverse3.position.set(-200,20,0);
+
+        var grouppir = new THREE.Group();
+        grouppir.add(pirap1,piraluz,hileraspira,hileraspira2,hileraspira3,hileraspira4);
+        grouppir.position.set(-100,0,0);
+
+      //MONTAÑAS  
+
+        //figuras
+        var moncir = new THREE.SphereGeometry(5,25,25);
+        var moncili = new THREE.CylinderGeometry(5,5,5,50);
+        var monbox = new THREE.BoxGeometry(1,1,1);
+        var moncir2 = new THREE.SphereGeometry(1,15,15);
+
+        //materiales
+        var montext = new THREE.MeshLambertMaterial({color:0x00a000});
+        var montext2 = new THREE.MeshLambertMaterial({color:0x000000});
+        var montext3 = new THREE.MeshLambertMaterial({color:0xffffff});
+        var montext4 = new THREE.MeshLambertMaterial({color:0xffe200});
+
+        //luces
+        var monluz = new THREE.PointLight(0xffffff,0.5,80,0.5);
+        monluz.position.set(0,60,170);
+
+
+        //mallas
+        var monpis = new THREE.Mesh(monbox, montext);
+        var mont1 = new THREE.Mesh(moncili, montext);
+        var montc1 = new THREE.Mesh(moncir, montext);
+        var mont2 = new THREE.Mesh(moncir2, montext2);
+        var mont3 = new THREE.Mesh(moncir2, montext2);
+        var monnub = new THREE.Mesh(moncir2, montext3);
+        var moncub = new THREE.Mesh(monbox,montext4);
+        var moncub2 = new THREE.Mesh(monbox,montext3);
+
+
+
+        monpis.position.set(0,0,200);
+        monpis.scale.set(60,1,60);
+        mont1.position.set(0,12.5,200);
+        mont1.scale.set(1.5,5,1.5);
+        montc1.position.set(0,25,200);
+        montc1.scale.set(1.5,1.2,1.5);
+        mont2.position.set(2,20,192.5);
+        mont2.scale.set(0.5,2,0.5);
+        var mont3 = mont2.clone();
+        mont3.position.set(-2,20,192.5);
+        var montis = new THREE.Group();
+        montis.add(mont1,montc1);
+        var monojos = new THREE.Group();
+        monojos.add(mont2,mont3);
+        var montis2 = montis.clone();
+        montis2.position.set(5,0,-25);
+        montis2.scale.set(1.2,2,1.2);
+        var monojos2 = monojos.clone();
+        monojos2.position.set(5,10,-25);
+        monojos2.scale.set(1.2,1.5,1.2);
+        var montis3 = montis.clone();
+        montis3.position.set(-10,0,-10);
+        montis3.scale.set(1.1,1.5,1.1);
+        var monojos3 = monojos.clone();
+        monojos3.position.set(-10,10,-10);
+        monojos3.scale.set(1.1,1.3,1.1);
+
+        var montanias = new THREE.Group();
+        montanias.add(montis,montis2,monojos2,montis3,monojos,monojos3);
+
+        const montas = new THREE.TextureLoader().load('field.jpg');
+        var montain = new THREE.MeshStandardMaterial({map:montas,transparent:true,opacity:1,side:THREE.BackSide});
+        var miniverse4 = new THREE.Mesh(esfera2,montain);
+        miniverse4.position.set(0,20,200);
+
+        monnub.position.set(-3,40,0);
+        var monnub2 = monnub.clone();
+        var monnub4 = monnub.clone();
+        var monnub5 = monnub.clone();
+        var monnub6 = monnub.clone();
+        var monnub7 = monnub.clone();
+        monnub.scale.set(3,3,3);
+        var monnub3 = monnub.clone();
+        monnub2.position.set(0,42,0);
+        monnub2.scale.set(4,3,2);
+        monnub3.position.set(3,40,0);
+        monnub4.position.set(1.5,39,1.5);
+        monnub4.scale.set(3,2,2);
+        monnub5.position.set(-1.5,40,2);
+        monnub5.scale.set(3,2,2);
+        monnub6.position.set(-1.5,39,-1.5);
+        monnub6.scale.set(3,2,2);
+        monnub7.position.set(1.5,40,-2);
+        monnub7.scale.set(3,2,2);
+        var monojos4 = monojos.clone();
+        monojos4.position.set(0,33,-94.5);
+        monojos4.scale.set(0.5,0.5,0.5);
+        var monnube = new THREE.Group();
+        monnube.add(monnub,monnub2,monnub3,monnub4,monnub5,monnub6,monnub7,monojos4);
+        monnube.position.set(0,0,20);
+        var monnube2 = monnube.clone();
+        monnube2.position.set(0,0,-20);
+        var monnube3 = monnube.clone();
+        monnube3.position.set(15,30,15);
+        monnube3.scale.set(0.5,0.5,0.5);
+        var monnubes = new THREE.Group();
+        monnubes.add(monnube,monnube2,monnube3);
+        monnubes.rotation.y=3.14159;
+        monnubes.position.set(0,20,205);
+
+        moncub.position.set(0,50,0);
+        var x=0;
+        var y=0;
+        var moninter = new THREE.Shape();
+        moninter.moveTo(x-1.5,y+2); 
+        moninter.bezierCurveTo(x-1.5,y+2,x-1.5,y+2.5,x-1.5,y+3);
+        moninter.bezierCurveTo(x-1.5,y+3,x-1,y+3.5,x-0.5,y+4);
+        moninter.bezierCurveTo(x-0.5,y+4,x,y+4,x+0.5,y+4);
+        moninter.bezierCurveTo(x+0.5,y+4,x+1,y+3.5,x+1.5,y+3);
+        moninter.bezierCurveTo(x+1.5,y+3,x+1.5,y+2.5,x+1.5,y+2);
+        moninter.bezierCurveTo(x+1.5,y+2,x+1,y+1.5,x+0.5,y+1);
+        moninter.bezierCurveTo(x+0.5,y+1,x+0.5,y+0.5,x+0.5,y);
+        moninter.bezierCurveTo(x+0.5,y,x,y,x-0.5,y);
+        moninter.bezierCurveTo(x-0.5,y,x-0.5,y+0.5,x-0.5,y+1);
+        moninter.bezierCurveTo(x-0.5,y+1,x,y+1.5,x+0.5,y+2);
+        moninter.bezierCurveTo(x+0.5,y+2,x+0.5,y+2.5,x+0.5,y+3);
+        moninter.bezierCurveTo(x+0.5,y+3,x,y+3,x-0.5,y+3);
+        moninter.bezierCurveTo(x-0.5,y+3,x-0.5,y+2.5,x-0.5,y+2);
+        moninter.bezierCurveTo(x-0.5,y+2,x-1,y+2,x-1.5,y+2);
+        var extrudeS = {depth:0.25, bevelEnabled: false, bevelSegments:2,steps:2, bevelSize:1,bevelThickness: 1};
+        var monintcub = new THREE.ExtrudeGeometry(moninter,extrudeS);
+        var monintercub = new THREE.Mesh(monintcub,montext3);
+        monintercub.position.set(0,49.8,0.5);
+        monintercub.scale.set(0.15,0.15,0.15);
+        moncub2.position.set(0,49.65,0.5);
+        moncub2.scale.set(0.15,0.15,0.075);
+        var moninterro = new THREE.Group();
+        moninterro.add(moncub,moncub2,monintercub);
+        var moninterro2 = moninterro.clone();
+        moninterro2.rotation.y=1.5839;
+        var moninterro3 = moninterro.clone();
+        moninterro3.rotation.y=3.14159;
+        var moninterro4 = moninterro.clone();
+        moninterro4.rotation.y=-1.5839;
+        var moncubfin = new THREE.Group();
+        moncubfin.add(moninterro,moninterro2,moninterro3,moninterro4);
+        moncubfin.position.set(0,0,0);
+        var moncubfin2 = moncubfin.clone();
+        moncubfin2.position.set(0,-215,199);
+        moncubfin2.scale.set(5,5,5);
+        var moncubfin3 = moncubfin2.clone();
+        moncubfin3.position.set(-10,-197,210);
+        moncubfin3.scale.set(5,5,5);
+        
+
+        var groupmon = new THREE.Group();
+        groupmon.add(montanias,monluz,monnubes,monpis,moncubfin2,moncubfin3);
+
+
+        //CASTILLO DE NUBES
+
+        //figuras 
+        var nubcua = new THREE.BoxGeometry(6,3,3);
+        var nubcua2 = new THREE.BoxGeometry(1,1,1);
+        var nubcon = new THREE.ConeGeometry(11,20,4);   
+        var nubesf = new THREE.SphereGeometry(5,20,20);  
+
+        //materiales
+        var nubblan = new THREE.MeshLambertMaterial(0xffffff);
+        var nubcyan = new THREE.MeshLambertMaterial(0x5564eb);
+
+        //mallas
+        var nublad = new THREE.Mesh(nubcua,nubcyan);
+        var nubtech = new THREE.Mesh(nubcon,nubblan);
+        var nubplan = new THREE.Mesh(nubcua2,nubblan);
+        var nubpiso = new THREE.Mesh(nubcua2,nubblan);
+        var nubesfe = new THREE.Mesh(nubesf,nubblan);        
+
+
+        //ladrillos
+        nublad.position.set(-33.6,50,0);
+        var nublad2 = nublad.clone();
+        nublad2.position.set(-27.45,50,0);
+        var nublad3 = nublad.clone();
+        nublad3.position.set(-21.30,50,0);
+        var nublad4 = nublad.clone();
+        nublad4.position.set(-15.15,50,0);
+        var nublad5 = nublad.clone();
+        nublad5.position.set(-4.65,50,6.15);
+        var nublad6 = nublad.clone();
+        nublad6.position.set(1.5,50,6.15);
+        var nublad7 = nublad.clone();
+        nublad7.position.set(4.65,53.15,6.15);
+        var nublad8 = nublad.clone();
+        nublad8.position.set(-1.5,53.15,6.15);
+        
+        var nubhil = new THREE.Group();
+        nubhil.add(nublad,nublad2,nublad3,nublad4);
+
+        //hileras
+        nubhil.position.set(0,0,20);
+        var nubhil2 = nubhil.clone();
+        nubhil2.position.set(-3,3.15,20);
+        var nubhil3 = nubhil.clone();
+        nubhil3.position.set(0,6.3,20);
+        var nubhil4 = nubhil.clone();
+        nubhil4.position.set(-3,9.45,20);
+        var nubhil5 = nubhil.clone();
+        nubhil5.position.set(0,12.6,20);
+        var nubhil6 = nubhil.clone();
+        nubhil6.position.set(-3,15.75,20);
+        var nubpare = new THREE.Group();        
+        nubpare.add(nubhil,nubhil2,nubhil3,nubhil4,nubhil5,nubhil6);
+
+        //muros
+        var nubpare2 = nubpare.clone();
+        nubpare2.position.set(-18.3,0,34);
+        nubpare2.rotation.y=-1.5839;
+        var nubpare7 = nubpare.clone();
+        nubpare7.position.set(25.85,0,-60.25);
+        var nubpare3 = new THREE.Group();
+        nubpare3.add(nubpare,nubpare2);
+        var nubpare4 = nubpare3.clone();
+        nubpare4.rotation.y=1.5838862962;
+        nubpare4.position.set(17.6,0,-17.85);
+        var nubpare5 = new THREE.Group();
+        nubpare5.add(nubpare3,nubpare4);
+        var nubpare6 = nubpare5.clone();
+        nubpare6.rotation.y=3.1546826230;
+        nubpare6.position.set(0,0,-20);
+
+        //estructura
+        var nubest = new THREE.Group();
+        nubest.add(nublad5,nublad6);
+        var nubestr = new THREE.Group();
+        nubestr.add(nublad7,nublad8);
+        var nubest2 = nubest.clone();
+        nubest2.rotation.y=1.5838862962;
+        var nubest3 = nubest.clone();
+        nubest3.rotation.y=4.7254789498;
+        var nubest4 = nubest.clone();
+        nubest4.rotation.y=3.1546826230;
+        var nubestr2 = nubestr.clone();
+        nubestr2.rotation.y=1.5838862962;
+        var nubestr3 = nubestr.clone();
+        nubestr3.rotation.y=4.7254789498;
+        var nubestr4 = nubestr.clone();
+        nubestr4.rotation.y=3.1546826230;
+        var nubestru = new THREE.Group();
+        nubestru.add(nubest,nubest2,nubest3,nubest4,nubestr,nubestr2,nubestr3,nubestr4);
+        var nubestru2 = nubestru.clone();
+        nubestru2.position.set(0,6.3,0);
+        var nubestru3 = nubestru.clone();
+        nubestru3.position.set(0,12.6,0);
+        var nubestruct = new THREE.Group();
+        nubestruct.add(nubestru,nubestru2,nubestru3);
+        var nubestruct2 = nubestruct.clone();
+        nubestruct2.position.set(-37.5,0,-9.75);
+        var nubestruct3 = nubestruct.clone();
+        nubestruct3.position.set(37.5,0,-9.75);
+        var nubestruct4 = nubestruct.clone();
+        nubestruct4.position.set(12,0,-40);
+        nubestruct4.scale.set(0.5,1,0.5);
+        var nubestruct5 = nubestruct.clone();
+        nubestruct5.position.set(-12,0,-40);
+        nubestruct5.scale.set(0.5,1,0.5);
+        var nubestruct6 = new THREE.Group();
+        nubestruct6.add(nubestruct5,nubestruct4);
+        var nubestruct7 = nubestruct6.clone();
+        nubestruct7.position.set(0,0,60);
+        var nubestructura = new THREE.Group();
+        nubestructura.add(nubpare5,nubpare6,nubpare7,nubestruct2,nubestruct3,nubestruct6,nubestruct7);
+
+        //techo
+        nubtech.position.set(0,60,0);
+        nubtech.rotation.y=0.7853981634;
+        var nubtech2 = nubtech.clone();
+        nubtech2.position.set(37.5,77,-9.75);
+        var nubtech3 = nubtech.clone();
+        nubtech3.position.set(-37.5,77,-9.75);
+        var nubtech4 = nubtech.clone();
+        nubtech4.position.set(-12,72.3,-40);
+        nubtech4.scale.set(0.5,0.5,0.5);
+        var nubtech5 = nubtech.clone();
+        nubtech5.position.set(12,72.3,-40);
+        nubtech5.scale.set(0.5,0.5,0.5);
+        var nubtech6 = new THREE.Group();
+        nubtech6.add(nubtech4,nubtech5);
+        var nubtech7 = nubtech6.clone();
+        nubtech7.position.set(0,0,60);
+        var nubtech8 = nubtech.clone();
+        nubtech8.position.set(0,80,-9.75);
+        nubtech8.scale.set(1.5,1.5,1.5);
+        nubplan.position.set(0,66.75,-9.75);
+        nubplan.scale.set(75,1,60);
+
+        //piso
+        nubpiso.position.set(0,48,-12);
+        nubpiso.scale.set(90,1,75);
+        nubesfe.position.set(0,46,-9.75);
+        var nubesfe2 = nubesfe.clone();
+        var nubesfe3 = nubesfe.clone();
+        var nubesfe4 = nubesfe.clone();
+        var nubesfe5 = nubesfe.clone();
+        var nubesfe10 = nubesfe.clone();
+        var nubesfe11 = nubesfe.clone();
+        var nubesfe12 = nubesfe.clone();
+        var nubesfe13 = nubesfe.clone();
+        var nubesfe14 = nubesfe.clone();
+        var nubesfe15 = nubesfe.clone();
+        var nubesfe16 = nubesfe.clone();
+        var nubesfe17 = nubesfe.clone();
+        var nubesfe18 = nubesfe.clone();
+        var nubesfe19 = nubesfe.clone();
+        var nubesfe20 = nubesfe.clone();
+        nubesfe2.position.set(45,46,-45.75);
+        nubesfe3.position.set(45,46,-40.75);
+        nubesfe4.position.set(45,46,-35.75);
+        nubesfe5.position.set(45,46,-30.75);
+        nubesfe10.position.set(45,46,-25.75);
+        nubesfe11.position.set(45,46,-20.75);
+        nubesfe12.position.set(45,46,-15.75);
+        nubesfe13.position.set(45,46,-10.75);
+        nubesfe14.position.set(45,46,-5.75);
+        nubesfe15.position.set(45,46,-0.75);
+        nubesfe16.position.set(45,46,4.25);
+        nubesfe17.position.set(45,46,9.25);
+        nubesfe18.position.set(45,46,14.25);
+        nubesfe19.position.set(45,46,19.25);
+        nubesfe20.position.set(45,46,24.25); 
+        nubesfe.scale.set(2,2,2);
+        var nubesfe6 = nubesfe.clone();
+        nubesfe6.position.set(25,47,-29.75);
+        var nubesfe7 = nubesfe.clone();
+        nubesfe7.position.set(-25,47,-29.75);
+        var nubesfe8 = nubesfe.clone();
+        nubesfe8.position.set(25,47,10.25);
+        var nubesfe9 = nubesfe.clone();
+        nubesfe9.position.set(-25,4,10.25);
+        var nubesferas = new THREE.Group();
+        nubesferas.add(nubesfe2,nubesfe3,nubesfe4,nubesfe5,nubesfe10,nubesfe11,nubesfe12,nubesfe13,nubesfe14,nubesfe15,nubesfe16,nubesfe17,nubesfe18,nubesfe19,nubesfe20);
+        var nubesferas2 = nubesferas.clone();
+        nubesferas2.position.set(-7.5,0,0);
+        var nubesferas3 = nubesferas.clone();
+        nubesferas3.position.set(-15,0,0);
+        var nubesferas4 = nubesferas.clone();
+        nubesferas4.position.set(-22.5,0,0);
+        var nubesferas5 = nubesferas.clone();
+        nubesferas5.position.set(-30,0,0);
+        var nubesferas6 = nubesferas.clone();
+        nubesferas6.position.set(-37.5,0,0);
+        var nubesferas7 = nubesferas.clone();
+        nubesferas7.position.set(-45,0,0);
+        var nubesferas8 = nubesferas.clone();
+        nubesferas8.position.set(-52.7,0,0);
+        var nubesferas9 = nubesferas.clone();
+        nubesferas9.position.set(-60,0,0);
+        var nubesferas10 = nubesferas.clone();
+        nubesferas10.position.set(-67.5,0,0);
+        var nubesferas11 = nubesferas.clone();
+        nubesferas11.position.set(-75,0,0);
+        var nubesferas12 = nubesferas.clone();
+        nubesferas12.position.set(-82.5,0,0);
+        var nubesferas13 = nubesferas.clone();
+        nubesferas13.position.set(-90,0,0);
+        var nubpisofin = new THREE.Group();
+        nubpisofin.add(nubpiso,nubesferas,nubesferas2,nubesferas3,nubesferas4,nubesferas5,nubesferas6,nubesferas7,nubesferas8,nubesferas9,nubesferas10,nubesferas11,nubesferas12,nubesferas13);
+        var nubpisoanim1 = new THREE.Group();
+        nubpisoanim1.add(nubesfe,nubesfe6,nubesfe7,nubesfe8,nubesfe9);
+        nubpisoanim1.position.set(0,42,0);
+
+        //puerta
+        var puertafin2 = puertafin.clone();
+        puertafin2.position.set(0,50,0);
+        puertafin2.scale.set(2.75,2.1,2);
+
+        var nubluz = new THREE.PointLight(0xffffff,0.5,100,0.5);
+        nubluz.position.set(0,70,45);
+        var nubluz2 = new THREE.PointLight(0xffffff,0.5,100,0.5);
+        nubluz2.position.set(0,70,-45);
+
+
+        var groupnub = new THREE.Group();
+        groupnub.add(nubestructura,nubpisofin,nubpisoanim1,nubtech2,nubtech3,nubtech6,nubtech7,nubtech8,nubplan,puertafin2,nubluz,nubluz2);
+        groupnub.position.set(0,0,-190);
+
+        const nubciel = new THREE.TextureLoader().load('skies.jpg');
+        var ciel = new THREE.MeshStandardMaterial({map:nubciel,transparent:true,opacity:1,side:THREE.BackSide});
+        var miniverse5 = new THREE.Mesh(esfera2,ciel);
+        miniverse5.position.set(0,60,-200);
+
+        //interacciones
+        var animbox = new THREE.BoxGeometry(2, 2, 2);
+        var x2=0;
+        var y2=0;
+        var flecha = new THREE.Shape();
+        flecha.moveTo(x2-1,y2); 
+        flecha.bezierCurveTo(x2-1,y2,x2-1,y2+1,x2-1,y2+2);
+        flecha.bezierCurveTo(x2-1,y2+2,x2-1.5,y2+2,x2-2,y2+2);
+        flecha.bezierCurveTo(x2-2,y2+2,x2-1,y2+3,x2,y2+4);
+        flecha.bezierCurveTo(x2,y2+4,x2+1,y2+3,x2+2,y2+2);
+        flecha.bezierCurveTo(x2+2,y2+2,x2+1.5,y2+2,x2+1,y2+2);
+        flecha.bezierCurveTo(x2+1,y2+2,x2+1,y2+1,x2+1,y2);
+        flecha.bezierCurveTo(x2+1,y2,x2,y2,x2-1,y2);
+        
+        var animtext = new THREE.MeshLambertMaterial({color:0x00ffff,transparent:true,opacity:0.85});
+        var extrude2 = {depth:0.25, bevelEnabled: true, bevelSegments:1,steps:1, bevelSize:0.5,bevelThickness: 0.5};
+        var flecha2 = new THREE.ExtrudeGeometry(flecha,extrude2);
+        var indi = new THREE.Mesh(flecha2,animtext);
+
+        
+        
+        var anim1 = new THREE.Mesh(animbox,animtext);
+        indi.position.set(0,10,40);
+        
+        var india = indi.clone();
+        india.position.set(0,10,50);
+        india.rotation.x=1.5708;
+        var indi2 = indi.clone();
+        indi2.position.set(-10,10,40);
+        indi2.rotation.z=1.5708;
+        var indi3 = indi.clone();
+        indi3.position.set(10,10,40);
+        indi3.rotation.z=-1.5708;
+        var indi4 = indi.clone();
+        indi4.position.set(0,30,-30);
+        indi4.rotation.x=1.5708;
+        var indi4a = indi.clone();
+        indi4a.position.set(0,30,-40);
+        indi4a.rotation.x=-1.5708;
+
+        var indi5 = indi.clone();
+        indi5.position.set(200,10,40);
+        var indi6 = indi.clone();
+        indi6.position.set(190,10,40);
+        indi6.rotation.z=1.5708;
+        var indi7 = indi.clone();
+        indi7.position.set(210,10,40);
+        indi7.rotation.z=-1.5708;   
+        var indi8 = indi.clone();
+        indi8.position.set(245,20,-30);
+        indi8.rotation.x=1.5708; 
+        var indi9 = indi.clone();
+        indi9.position.set(235,20,-40);
+        indi9.rotation.z=1.5708;      
+        var indi10 = indi.clone();
+        indi10.position.set(155,20,-30);
+        indi10.rotation.x=1.5708; 
+        var indi11 = indi.clone();
+        indi11.position.set(165,20,-40);
+        indi11.rotation.z=-1.5708; 
+
+        var indi12 = indi.clone();
+        indi12.position.set(0,50,-150); 
+        var indi12a = indi.clone();
+        indi12a.position.set(0,50,-140);
+        indi12a.rotation.x=1.5708;
+        var indi13 = indi.clone();
+        indi13.position.set(10,50,-150);
+        indi13.rotation.z=-1.5708; 
+        var indi14 = indi.clone();
+        indi14.position.set(-10,50,-150);
+        indi14.rotation.z=1.5708;
+        var indi15 = indi.clone();
+        indi15.position.set(45,50,-250);
+        indi15.rotation.z=1.5708;
+        var indi16 = indi.clone();
+        indi16.position.set(55,50,-240);
+        indi16.rotation.x=1.5708;
+        var indi17 = indi.clone();
+        indi17.position.set(-45,50,-250);
+        indi17.rotation.z=-1.5708;
+        var indi18 = indi.clone();
+        indi18.position.set(-55,50,-240);
+        indi18.rotation.x=1.5708;
+
+        var indi19 = indi.clone();
+        indi19.position.set(-200,10,40);
+        var indi20 = indi.clone();
+        indi20.position.set(-190,10,40);
+        indi20.rotation.z=-1.5708;
+        var indi21 = indi.clone();
+        indi21.position.set(-200,20,-45);
+        indi21.rotation.x=1.5708;
+
+        var indi22 = indi.clone();
+        indi22.position.set(0,10,160);
+        var indi23 = indi.clone();
+        indi23.position.set(20,50,160);
+        indi23.rotation.z=3.14159;
+        var indi25 = indi.clone();
+        indi25.position.set(0,10,150);
+        indi25.rotation.x=-1.5708;
+                        
+        
+        indi.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0x8183c8); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 40, z: -35})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        india.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        india.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        india.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        india.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 140})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        
+        indi2.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi2.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi2.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi2.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:-200, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi3.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi3.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi3.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi3.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:200, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi4.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi4.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi4.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi4.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi4a.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi4a.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi4a.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi4a.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 65, z: -145})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi5.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi5.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi5.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi5.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:150, y:25, z: -50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi6.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi6.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi6.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi6.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi7.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi7.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi7.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi7.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:250, y: 25, z: -50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi8.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi8.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi8.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi8.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:200, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi9.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi9.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi9.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi9.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:150, y: 25, z: -50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi10.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi10.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi10.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi10.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:200, y:25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi11.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi11.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi11.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi11.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:250, y: 25, z: -50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi12.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi12.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi12.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi12.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:-50, y: 30, z: 0})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi12a.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi12a.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi12a.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi12a.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi13.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi13.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi13.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi13.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:60, y: 75, z: -245})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi14.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi14.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi14.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi14.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:-60, y: 75, z: -245})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi15.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi15.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi15.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi15.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:-60, y: 75, z: -245})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi16.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi16.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi16.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi16.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 65, z: -145})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi17.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi17.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi17.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi17.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:60, y: 75, z:-245})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi18.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi18.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi18.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi18.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 65, z: -145})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi19.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi19.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi19.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi19.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:-200, y: 25, z: -50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi20.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi20.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi20.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi20.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi21.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi21.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi21.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi21.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:-200, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi22.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi22.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi22.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi22.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:30, y: 60, z: 160})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi23.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi23.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi23.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi23.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 140})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        indi25.addEventListener('mouseover', (event) => {  
+          event.target.material.color.set(0xff0000); 
+          document.body.style.cursor = 'pointer';
+        });
+        indi25.addEventListener('mouseout', (event) => {  
+          event.target.material.color.set(0x00ffff);
+          document.body.style.cursor = 'default';
+        });
+        indi25.addEventListener('mousedown', (event) => { 
+          event.target.scale.set(1.1, 1.1, 1.1);
+        });
+        indi25.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 25, z: 50})           
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        
+        
+
+        
+        var luzcraft = new THREE.PointLight(0xffffff,0.5,100,0.5);
+        luzcraft.position.set(0,60,25);
+
+
+        //Añadir a la escena
+        scene.add(miniverse);
+        scene.add(miniverse2);
+        scene.add(miniverse3);
+        scene.add(miniverse4);
+        scene.add(miniverse5);
+        
+        scene.add(luzcraft);
+
+        scene.add(groupmon);
+        scene.add(grouppir);
+        scene.add(groupbow);
+        scene.add(groupcp);
+        scene.add(groupnub);
+        
+        
+        
+        
+        //scene.add(ventan);
+        scene.add(torre3);
+        scene.add(torre4);
+        scene.add(light1);
+        scene.add(light2);
+        scene.add(light3);
+        scene.add(light4);
+        scene.add(light5);
+
+        
+        scene.add(indi);
+        scene.add(india);
+        scene.add(indi2);
+        scene.add(indi3);
+        scene.add(indi4);
+        scene.add(indi4a);
+        scene.add(indi5);
+        scene.add(indi6);
+        scene.add(indi7);
+        scene.add(indi8);
+        scene.add(indi9);
+        scene.add(indi10);
+        scene.add(indi11);
+        //scene.add(indi12);
+        scene.add(indi12a);
+        scene.add(indi13);
+        scene.add(indi14);
+        scene.add(indi15);
+        scene.add(indi16);
+        scene.add(indi17);
+        scene.add(indi18);
+        scene.add(indi19);
+        scene.add(indi20);
+        scene.add(indi21);
+        scene.add(indi22);
+        scene.add(indi23);
+        scene.add(indi25);
+
+
+        
+        interactionManager.add(indi);
+        interactionManager.add(india);
+        interactionManager.add(indi2);
+        interactionManager.add(indi3);
+        interactionManager.add(indi4);
+        interactionManager.add(indi4a);
+        interactionManager.add(indi5);
+        interactionManager.add(indi6);
+        interactionManager.add(indi7);
+        interactionManager.add(indi8);
+        interactionManager.add(indi9);
+        interactionManager.add(indi10);
+        interactionManager.add(indi11);
+        //interactionManager.add(indi12);
+        interactionManager.add(indi12a);
+        interactionManager.add(indi13);
+        interactionManager.add(indi14);
+        interactionManager.add(indi15);
+        interactionManager.add(indi16);
+        interactionManager.add(indi17);
+        interactionManager.add(indi18);
+        interactionManager.add(indi19);
+        interactionManager.add(indi20);
+        interactionManager.add(indi21);
+        interactionManager.add(indi22);
+        interactionManager.add(indi23);
+        interactionManager.add(indi25);
+        
+
+        scene.add(lightz);
+        //scene.add(gridHelper);
+        //scene.add(axesHelper);
+        //scene.add(luxnosupp1);
+        //scene.add(luxnosupp2);
+        //scene.add(luxnosupp3);
+        //scene.add(luxnosupp4);
+        //scene.add(luxnosupp5);
+        //scene.add(luxnosupp6);
+        //scene.add(luxnosuppz);
+        //camera.lookAt(cppis1.position);
+        var delta =0;
+        var delta2 =0;
+        var delta3 =0;
+        var nubdel =10;
+        var nubdel2 =20;
+        var nubdel3 =30;
+        var nubdel4 =40;
+        var nubdel5 =50;
+        var nubdel6 =60;
+        var nubdel7 =70;
+        var nubdel8 =80;
+        var nubdel9 =90;
+        var nubdel10 =100;
+        var nubdel11 =110;
+        var nubdel12 =120;
+        var nubdel13 =130;
+        
+
+        requestAnimationFrame(render);
+        function render(){
+            renderer.render(scene,camera);
+            requestAnimationFrame(render);
+            
+            indi.rotation.y +=0.025;
+            india.rotation.y +=0.025;
+            indi2.rotation.x +=0.025;
+            indi3.rotation.x +=0.025;
+            indi4.rotation.y +=0.025;
+            indi4a.rotation.y +=0.025;
+            indi5.rotation.y +=0.025;
+            indi6.rotation.x +=0.025;
+            indi7.rotation.x +=0.025;
+            indi8.rotation.y +=0.025;
+            indi9.rotation.x +=0.025;
+            indi10.rotation.y +=0.025;
+            indi11.rotation.x +=0.025;
+
+            indi12.rotation.y +=0.025;
+            indi12a.rotation.y +=0.025;
+            indi13.rotation.x +=0.025;
+            indi14.rotation.x +=0.025;
+            indi15.rotation.x +=0.025;
+            indi16.rotation.y +=0.025;
+            indi17.rotation.x +=0.025;
+            indi18.rotation.y +=0.025;
+
+            indi19.rotation.y +=0.025;           
+            indi20.rotation.x +=0.025;
+            indi21.rotation.y +=0.025;
+
+            indi22.rotation.y +=0.025;
+            indi23.rotation.y +=0.025;
+            indi25.rotation.y +=0.025;
+
+
+            TWEEN.update()  //se agrega la transición del tween a functionrender para que genere la animación el movimiento suave
+          
+            interactionManager.update();
+
+            delta+=0.01;
+            delta2+=0.025;
+            delta3+=0.005;
+            nubdel+=0.005;
+            nubdel2+=0.005;
+            nubdel3+=0.005;
+            nubdel4+=0.005;
+            nubdel5+=0.005;
+            nubdel6+=0.005;
+            nubdel7+=0.005;
+            nubdel8+=0.005;
+            nubdel9+=0.005;
+            nubdel10+=0.005;
+            nubdel11+=0.005;
+            nubdel12+=0.005;
+            nubdel13+=0.005;
+            
+            
+            monnube.position.x=Math.sin(delta)*20;
+            monnube.position.z=Math.cos(delta)*20;
+            monnube.position.y=Math.sin(delta)*-5;
+            monnube2.position.x=Math.sin(delta)*-20;
+            monnube2.position.z=Math.cos(delta)*-20;
+            monnube2.position.y=Math.sin(delta2)*-10;
+            monnube3.position.y=Math.sin(delta3)*-10;
+
+            nubesfe.position.y=Math.sin(delta3)*-3;
+            nubesfe6.position.y=Math.sin(delta3)*-3;
+            nubesfe7.position.y=Math.sin(delta3)*-3;
+            nubesfe8.position.y=Math.sin(delta3)*-3;
+            nubesfe9.position.y=Math.sin(delta3)*-3;
+            nubesferas.position.y=Math.sin(nubdel)*-1;
+            nubesferas2.position.y=Math.sin(nubdel2)*-1;
+            nubesferas3.position.y=Math.sin(nubdel3)*-1;
+            nubesferas4.position.y=Math.sin(nubdel4)*-1;
+            nubesferas5.position.y=Math.sin(nubdel5)*-1;
+            nubesferas6.position.y=Math.sin(nubdel6)*-1;
+            nubesferas7.position.y=Math.sin(nubdel7)*-1;
+            nubesferas8.position.y=Math.sin(nubdel8)*-1;
+            nubesferas9.position.y=Math.sin(nubdel9)*-1;
+            nubesferas10.position.y=Math.sin(nubdel10)*-1;
+            nubesferas11.position.y=Math.sin(nubdel11)*-1;
+            nubesferas12.position.y=Math.sin(nubdel12)*-1;
+            nubesferas13.position.y=Math.sin(nubdel13)*-1;
+
+        } 
+        window.addEventListener('resize',onWindowResize,false);
+        function onWindowResize(){
+            camera.aspect = window.innerWidth/window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth,window.innerHeight);
+        }
+        //la reproduccion parcial o total de este código esta penada bajo los estatutos de uso legitimo de fair use, en la legislacion noxiana.
+        //Escenario creado por (su majestad) Donnadieu Bernal Luis Ernesto & Hernández Roldán Arely Viridianal, 1742
+    </script>
+</body>
+</html>
